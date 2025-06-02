@@ -22,6 +22,8 @@ class study(page):
 
         back_btn.clicked.connect(lambda: self.goToIndex(1))
 
+        flip_btn.clicked.connect(lambda:self.flip())
+
         self.current_card=QLabel()
 
 
@@ -33,15 +35,22 @@ class study(page):
         self.layout.addWidget(back_btn)
         
 
+    def flip(self):
+        print(self.card_side)
+        if self.card_side =="front":
+            self.card_side ="back"
+        elif self.card_side =="back":
+            self.card_side = "front"
 
+        self.change_card(self.current_card_index)
 
-    def change_card(self,index,side):
-        path =f"Drawcard_1/decks/{self.deck_title}/{index}{side}.png"
+    def change_card(self,index):
+        path =f"decks/{self.deck_title}/{index}{self.card_side}.png"
         print(path)
         pixmap = QPixmap(path)
         self.current_card.setPixmap(pixmap)
-        #self.current_card.resize(pixmap.width(),pixmap.height())
-        self.current_card.resize(300,300)
+        self.current_card.resize(pixmap.width(),pixmap.height())
+        #self.current_card.resize(300,300)
 
 
         
@@ -49,7 +58,7 @@ class study(page):
 
     def update_deck(self,title):
         flag=False
-        with open("Drawcard_1/decks/decks.json") as f:
+        with open("decks/decks.json") as f:
 
             data=json.load(f)
 
@@ -61,10 +70,9 @@ class study(page):
 
         if flag:
             self.deck_title = title
-            self.change_card(self.current_card_index,self.card_side)
+            self.change_card(self.current_card_index)
             
-        else:
-            print("deck not found")
+        return flag
 
 
 

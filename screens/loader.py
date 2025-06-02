@@ -19,7 +19,7 @@ class deckLoader(pageParent.page):
         back_btn = QPushButton("back")
         back_btn.clicked.connect(lambda: self.goToIndex(0))
 
-        with open("Drawcard_1/decks/decks.json") as f:
+        with open("decks/decks.json") as f:
             data= json.load(f)
         
         for deckName,cardCount in data.items():
@@ -34,8 +34,10 @@ class deckLoader(pageParent.page):
         #self.setStyleSheet("* { border: 1px solid red; }")
 
     def loadDeck(self,title):
-        self.windowStack.widget(3).update_deck(title)
-        self.goToIndex(3)
+        if self.windowStack.widget(3).update_deck(title):
+            self.goToIndex(3)
+        else:
+            print("deck not found")
 
     def add_deck(self,title,count):
 

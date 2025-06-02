@@ -70,7 +70,7 @@ class createDeck(pageParent.page):
             folder_name = Path(deckName)
     
 
-            base_path = Path("Drawcard_1/decks")
+            base_path = Path("decks")
             full_path = base_path / folder_name
             if not full_path.exists():
 
@@ -84,7 +84,7 @@ class createDeck(pageParent.page):
                     current_Widget = self.layout.itemAt(i).widget()
                     current_Widget.saveSelf(full_path,i-2)
 
-                metaFile="Drawcard_1/decks/decks.json"
+                metaFile="decks/decks.json"
 
                 with open(metaFile) as f:
                     data = json.load(f)
