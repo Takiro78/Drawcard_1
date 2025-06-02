@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget,QPushButton,QVBoxLayout,QLabel
 from PyQt5.QtGui import QPixmap
 from screens.pageParent import page
+import random
 import json
 
 class study(page):
@@ -11,7 +12,7 @@ class study(page):
         self.current_card_index=0
         
         self.card_side = "front"
-        self.previous_card_index = -1
+        self.previous_card_stack = []
         self.card_count = 1
         self.deck_title=""
 
@@ -24,6 +25,10 @@ class study(page):
 
         flip_btn.clicked.connect(lambda:self.flip())
 
+        next_btn.clicked.connect(lambda: self.next_card())
+
+        prev_btn.clicked.connect(lambda:self.prev_card())
+
         self.current_card=QLabel()
 
 
@@ -35,6 +40,31 @@ class study(page):
         self.layout.addWidget(back_btn)
         
 
+    def next_card(self):
+        print("a")
+        self.previous_card_stack.append(self.current_card_index)
+        print("b")
+
+        self.current_card_index = random.randrange(0,self.card_count)
+
+        while self.previous_card_stack[-1] == self.current_card_index:
+
+            print("c")
+            self.current_card_index = random.randrange(0,self.card_count)
+            print(self.current_card_index)
+
+        self.card_side="front"
+        self. change_card()  
+
+    def prev_card(self):
+        if len(self.previous_card_stack)!=0:
+            self.current_card_index=self.previous_card_stack.pop()
+            
+            self.card_side="front"
+
+            self.change_card()
+         
+
     def flip(self):
         print(self.card_side)
         if self.card_side =="front":
@@ -44,8 +74,12 @@ class study(page):
 
         self.change_card(self.current_card_index)
 
-    def change_card(self,index):
-        path =f"decks/{self.deck_title}/{index}{self.card_side}.png"
+    def change_card(self,index=None,side= None):
+        if index == None:
+            index = self.current_card_index
+        if side is None:
+            side = self.card_side
+        path =f"decks/{self.deck_title}/{index}{side}.png"
         print(path)
         pixmap = QPixmap(path)
         self.current_card.setPixmap(pixmap)
@@ -70,7 +104,7 @@ class study(page):
 
         if flag:
             self.deck_title = title
-            self.change_card(self.current_card_index)
+            self.change_card()
             
         return flag
 
